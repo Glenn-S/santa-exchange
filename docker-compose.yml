@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  svc_webapp:
+    container_name: secret-santa
+    image: skeltong2/secret-santa-webapp:1.0.2
+    restart: always
+    environment:
+      SERVER_PORT: '${SERVER_PORT}'
+      MONGO_DB_PORT: '27017'
+      DB_HOST: 'db_mongo'
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    ports:
+      - '${EXTERNAL_PORT}:${SERVER_PORT}'
+    networks:
+      - backend
+    depends_on:
+      - db_mongo
+
+  db_mongo:
+    container_name: mongo_db
+    image: mongo:4.2.2-bionic
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    ports:
+      - '${MONGO_DB_PORT}:27017'
+    volumes:
+      - db-data:/data/db
+    networks:
+      - backend
+    command: mongod --auth
+
+networks:
+  backend:
+    driver: 'bridge'
+
+volumes:
+  db-data:

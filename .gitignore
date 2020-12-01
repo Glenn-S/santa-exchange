@@ -1,5 +1,5 @@
 # Builds
-build/*
+Backend/build/*
 
 # Logs
 logs
@@ -145,4 +145,4 @@ pyenv
 Vagrantfile
 
 # Mongo DB ignore files
-mongo/*
+Backend/mongo/*
